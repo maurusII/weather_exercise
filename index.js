@@ -2,9 +2,11 @@ const apiKey = "8011cc0e8f3bb18806c881a1ae9b2093"; //metti qui la tua chiave
 const citySelect = document.getElementById("city-select");
 const weatherCards = document.getElementById("weather-cards"); //div to fill with weather cards
 const form = document.getElementById("city-form"); //form to get the city
-// const cities = ["Milano", "Roma", "Bologna", "Palermo", "Napoli", "Torino", "Firenze"];
-let cities = document.getElementById('city-select').querySelectorAll('option');
-//for the home exercise using Promise.all
+
+let cities = new Array();
+citySelect.querySelectorAll('option').forEach((city) => {cities.push(city.value);});
+const allCitiesSync = document.getElementById("all-cities-sync");
+const allCities = document.getElementById("all-cities");
 
 function clearWeatherCards() {
   weatherCards.innerHTML = '';
@@ -52,3 +54,27 @@ form.addEventListener("submit", event => {
   getWeather(selectedCity, apiKey);
 });
 
+allCitiesSync.addEventListener("click", event =>{
+  event.preventDefault();
+  clearWeatherCards();
+  let promises = new Array();
+  let url = new Array();
+  cities.forEach((city) => {
+    promises.push(fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&lang=it&units=metric&appid=${apiKey}`));
+  });
+
+  Promise.all(promises)
+    .then(responses => {
+      console.log(responses);
+      Promise.all(responses.map((response) => response.json()))
+        .then(data => {
+          console.log(data);
+          let cardsHTML = data.map((cityData) => displayWeather(cityData));
+          cardsHTML.forEach((cardHTML) => {
+            weatherCards.insertAdjacentHTML('beforeend', cardHTML);
+          })
+        })
+        .catch(error => console.error(error));
+    })
+    .catch(error => console.error(error));
+})
