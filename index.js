@@ -58,7 +58,6 @@ allCitiesSync.addEventListener("click", event =>{
   event.preventDefault();
   clearWeatherCards();
   let promises = new Array();
-  let url = new Array();
   cities.forEach((city) => {
     promises.push(fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&lang=it&units=metric&appid=${apiKey}`));
   });
