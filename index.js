@@ -36,7 +36,6 @@ function getWeather(selectedCity, apiKey) {
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       weatherCards.innerHTML = displayWeather(data);
     })
     .catch(error => console.error(error)); 
@@ -58,7 +57,6 @@ allCitiesSync.addEventListener("click", event =>{
   event.preventDefault();
   clearWeatherCards();
   let promises = new Array();
-  let url = new Array();
   cities.forEach((city) => {
     promises.push(fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&lang=it&units=metric&appid=${apiKey}`));
   });
@@ -77,4 +75,17 @@ allCitiesSync.addEventListener("click", event =>{
         .catch(error => console.error(error));
     })
     .catch(error => console.error(error));
+});
+
+allCities.addEventListener("click", event => {
+  event.preventDefault();
+  clearWeatherCards();
+  cities.forEach(city => {
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&lang=it&units=metric&appid=${apiKey}`)
+      .then(response => response.json())
+      .then(data => {
+        weatherCards.insertAdjacentHTML('beforeend', displayWeather(data));
+      })
+      .catch(error => console.error(error));
+  })
 })
