@@ -87,5 +87,5 @@ allCities.addEventListener("click", event => {
         weatherCards.insertAdjacentHTML('beforeend', displayWeather(data));
       })
       .catch(error => console.error(error));
-  })
-})
+  });
+});
